@@ -97,7 +97,7 @@ $tab = isset($_GET['tab']) ? $_GET['tab'] : $default_tab;
                 <div class="crawl_page">
                     <div class="postbox">
                         <div class="inside">
-                            XPhim / Topxx.vip là kho dữ liệu phim tập trung, cập nhật nhanh, chất lượng cao, ổn
+                            TOPXX (Topxx.vip) là kho dữ liệu phim tập trung, cập nhật nhanh, chất lượng cao, ổn
                             định. Tốc độ phát cực nhanh với đường truyền băng thông cao, đảm bảo đáp ứng được
                             lượng xem phim trực tuyến lớn. Đồng thời giúp nhà phát triển website phim giảm thiểu chi phí
                             của các dịch vụ lưu trữ và stream. <br/>
@@ -107,7 +107,7 @@ $tab = isset($_GET['tab']) ? $_GET['tab'] : $default_tab;
                             content của các website!<br/>
                             - API được cung cấp miễn phí: <a href="https://topxx.vip" target="_blank">https://topxx.vip</a>
                             <br/>
-                            - Tham gia trao đổi tại: <a href="https://t.me/+QMfjBOtNpkZmNTc1" target="_blank">https://t.me/+QMfjBOtNpkZmNTc1</a>
+                            - Tham gia trao đổi tại: <a href="https://t.me/hotrokhophim" target="_blank">https://t.me/hotrokhophim</a>
                             <br/>
                         </div>
                     </div>

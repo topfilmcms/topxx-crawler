@@ -12,7 +12,7 @@ class oFim_Backend
         if (isset($_GET['page'])) $this->_page = $_GET['page'];
         add_action('admin_menu', array($this, 'menus'));
         if (isset($_GET['page'])) {
-            if ($_GET['page'] == 'ofim-manager-css-js' || $_GET['page'] == 'ofim-manager-crawl-topxx') {
+            if ($_GET['page'] == 'ofim-manager-crawl-topxx') {
                 add_action('admin_enqueue_scripts', array($this, 'css'));
             }
         }
@@ -34,10 +34,8 @@ class oFim_Backend
     public function menus()
     {
 
-        add_menu_page('XPhim', 'Cài đặt XPhim', 'manage_options', $this->_menuSlug, array($this, 'dispatch_function'), '', 3);
+        add_menu_page('TOPXX', 'Cài đặt TOPXX', 'manage_options', $this->_menuSlug, array($this, 'dispatch_function'), '', 3);
         add_submenu_page($this->_menuSlug, 'Crawl Topxx', 'Crawl Topxx', 'manage_options', $this->_menuSlug . '-crawl-topxx', array($this, 'dispatch_function'));
-        add_submenu_page($this->_menuSlug, 'CSS&JS', 'JWPlayer', 'manage_options', $this->_menuSlug . '-jwplayer', array($this, 'dispatch_function'));
-        add_submenu_page($this->_menuSlug, 'CSS&JS', 'CSS&JS', 'manage_options', $this->_menuSlug . '-css-js', array($this, 'dispatch_function'));
     }
 
     public function dispatch_function()
@@ -50,14 +48,6 @@ class oFim_Backend
         }
         if ($page == 'ofim-manager') {
             $obj = $oController->getController('AdminManager', '/backend');
-            $obj->display();
-        }
-        if ($page == 'ofim-manager-css-js') {
-            $obj = $oController->getController('AdminCSSJS', '/backend');
-            $obj->display();
-        }
-        if ($page == 'ofim-manager-jwplayer') {
-            $obj = $oController->getController('AdminJWPlayer', '/backend');
             $obj->display();
         }
     }

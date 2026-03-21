@@ -33,7 +33,7 @@ class oFim_Permalink
 	-------------------------------------------------------------------------------
 	*/
     public function slug_title() {
-        echo '<h3 id="dooplay-permalinks">XPhim Permalink Settings</h3>';
+        echo '<h3 id="dooplay-permalinks">TOPXX Permalink Settings</h3>';
     }
 
     public function ophim_directors() {

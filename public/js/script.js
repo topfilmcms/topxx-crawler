@@ -85,6 +85,111 @@ jQuery(function($){
             })
                 .open();
     });
+    // --- Preview images (hover) management ---
+    var previewWrap = $('#ophim-preview-images-wrap');
+
+    function ophimPreviewCount() {
+        return previewWrap.find('.ophim-preview-item').length;
+    }
+
+    function ophimPreviewAddImage(url) {
+        if (ophimPreviewCount() >= 6) {
+            alert('Tối đa 6 ảnh preview!');
+            return;
+        }
+        var html = '<div class="ophim-preview-item" style="position: relative; display: inline-block;">' +
+            '<img src="' + url + '" style="width: 120px; height: 80px; object-fit: cover; border-radius: 4px; border: 1px solid #ddd;">' +
+            '<input type="hidden" name="ophim_preview_images[]" value="' + url + '">' +
+            '<button type="button" class="ophim-preview-remove" title="Xóa ảnh" style="position: absolute; top: -6px; right: -6px; background: #dc3232; color: #fff; border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 14px; line-height: 18px; cursor: pointer; padding: 0;">&times;</button>' +
+            '</div>';
+        previewWrap.append(html);
+        ophimPreviewToggleClearBtn();
+    }
+
+    function ophimPreviewToggleClearBtn() {
+        if (ophimPreviewCount() > 0) {
+            $('.ophim-preview-clear-all-btn').show();
+        } else {
+            $('.ophim-preview-clear-all-btn').hide();
+        }
+    }
+
+    $('body').on('click', '.ophim-preview-remove', function(e) {
+        e.preventDefault();
+        $(this).closest('.ophim-preview-item').remove();
+        ophimPreviewToggleClearBtn();
+    });
+
+    $('body').on('click', '.ophim-preview-clear-all-btn', function(e) {
+        e.preventDefault();
+        if (confirm('Xóa tất cả ảnh preview?')) {
+            previewWrap.empty();
+            ophimPreviewToggleClearBtn();
+        }
+    });
+
+    $('body').on('click', '.ophim-preview-upload-btn', function(e) {
+        e.preventDefault();
+        var remaining = 6 - ophimPreviewCount();
+        if (remaining <= 0) {
+            alert('Đã đạt tối đa 6 ảnh preview!');
+            return;
+        }
+        var uploader = wp.media({
+            title: 'Chọn ảnh preview hover',
+            button: { text: 'Thêm ảnh đã chọn' },
+            library: { type: 'image' },
+            multiple: true
+        });
+        uploader.on('select', function() {
+            var attachments = uploader.state().get('selection').toJSON();
+            var added = 0;
+            for (var i = 0; i < attachments.length; i++) {
+                if (ophimPreviewCount() >= 6) break;
+                ophimPreviewAddImage(attachments[i].url);
+                added++;
+            }
+            if (added < attachments.length) {
+                alert('Chỉ thêm được ' + added + ' ảnh (tối đa 6).');
+            }
+        });
+        uploader.open();
+    });
+
+    $('body').on('click', '.ophim-preview-add-url-btn', function(e) {
+        e.preventDefault();
+        $('#ophim-preview-url-input').show();
+        $('#ophim-preview-url-field').focus();
+    });
+
+    $('body').on('click', '.ophim-preview-url-cancel', function(e) {
+        e.preventDefault();
+        $('#ophim-preview-url-input').hide();
+        $('#ophim-preview-url-field').val('');
+    });
+
+    $('body').on('click', '.ophim-preview-url-confirm', function(e) {
+        e.preventDefault();
+        var url = $.trim($('#ophim-preview-url-field').val());
+        if (!url) {
+            alert('Vui lòng nhập URL ảnh.');
+            return;
+        }
+        ophimPreviewAddImage(url);
+        $('#ophim-preview-url-field').val('');
+        $('#ophim-preview-url-input').hide();
+    });
+
+    $('body').on('keypress', '#ophim-preview-url-field', function(e) {
+        if (e.which === 13) {
+            e.preventDefault();
+            $('.ophim-preview-url-confirm').trigger('click');
+        }
+    });
+
+    ophimPreviewToggleClearBtn();
+    // --- End preview images management ---
+
     $('body').on('click', '.ophim_upload_image_logo_jwplayer', function(e){
         e.preventDefault();
 

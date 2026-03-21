@@ -53,8 +53,8 @@ function wisdom_filter_tracked_plugins()
     if ($typenow == 'ophim') {
         $current_plugin = oIsset($_GET,'featured');?>
         <select name="featured" id="featured">
-            <option value="all" <?php selected('all', $current_plugin); ?>>All</option>
-            <option value="1" <?php selected('1', $current_plugin); ?>>Featured</option>
+            <option value="all" <?php selected('all', $current_plugin); ?>>Tất cả</option>
+            <option value="1" <?php selected('1', $current_plugin); ?>>Nổi bật</option>
         </select>
     <?php }
 }
@@ -146,7 +146,7 @@ function ophim_meta_box()
 {
     global $typenow;
     if ($typenow == 'ophim') {
-        add_meta_box('info_phim', 'Thông tin', 'info_phim', 'ophim');
+        add_meta_box('info_phim', 'Thông tin TOPXX', 'info_phim', 'ophim');
         if (isset($_GET['action']) && $_GET['action'] == 'edit') {
             add_meta_box('link_custom_box_html', 'Tập phim', 'link_custom_box_html', 'ophim');
         }
@@ -168,8 +168,18 @@ function ophim_thongtin_save($post_id)
         foreach ($post as $key => $p) {
             update_post_meta($post_id, $key, $p);
         }
-        return $post_id;
     }
+
+    if (isset($_POST['ophim_preview_images'])) {
+        $raw = $_POST['ophim_preview_images'];
+        $clean = array_values(array_filter(array_map('esc_url_raw', (array) $raw)));
+        $clean = array_slice($clean, 0, 6);
+        update_post_meta($post_id, 'ophim_preview_images', $clean);
+    } else {
+        update_post_meta($post_id, 'ophim_preview_images', array());
+    }
+
+    return $post_id;
 }
 
 add_action('save_post', 'ophim_thongtin_save');
@@ -199,7 +209,7 @@ function link_custom_box_html($post)
 
 function framework_core()
 {
-    framework_create_post_type('ophim', 'XPhim', 'XPhim', get_option('ophim_slug_movies') ? get_option('ophim_slug_movies') : 'movie', ['title', 'editor'], 'dashicons-format-video');
+    framework_create_post_type('ophim', 'TOPXX', 'TOPXX', get_option('ophim_slug_movies') ? get_option('ophim_slug_movies') : 'movie', ['title', 'editor'], 'dashicons-format-video');
     framework_create_taxonomies('ophim_directors', 'ophim', 'Đạo diễn', 'Đạo diễn', get_option('ophim_slug_directors') ? get_option('ophim_slug_directors') : 'directors');
     framework_create_taxonomies_cat('ophim_categories', 'ophim', 'Danh mục', 'Danh mục', get_option('ophim_slug_categories') ? get_option('ophim_slug_categories') : 'categories');
     framework_create_taxonomies('ophim_actors', 'ophim', 'Diễn viên', 'Diễn viên', get_option('ophim_slug_actors') ? get_option('ophim_slug_actors') : 'actors');

@@ -1,9 +1,9 @@
 <?php
 /**
- * Plugin Name: XPhim-xAPI
- * Description: Topxx.vip là kho dữ liệu phim tập trung, cung cấp đầy đủ meta (tiêu đề, mô tả, poster, diễn viên, thể loại, quốc gia, nguồn phát) cho các nền tảng xem phim thông qua API đơn giản và linh hoạt. Plugin XPhim-xAPI kết nối WordPress với Topxx.vip.
+ * Plugin Name: TOPXX
+ * Description: TOPXX (Topxx.vip) — Hệ thống kho dữ liệu phim tập trung, cung cấp đầy đủ metadata (tiêu đề, mô tả, poster, diễn viên, thể loại, quốc gia, nguồn phát) cho các nền tảng xem phim thông qua API đơn giản và linh hoạt. Plugin TOPXX kết nối WordPress với Topxx.vip.
  * Version: 1.0.1
- * Author: XPhim
+ * Author: TOPXX
  * Author URI: https://topxx.vip
  */
 if ( ! defined( 'WPINC' ) ) {
