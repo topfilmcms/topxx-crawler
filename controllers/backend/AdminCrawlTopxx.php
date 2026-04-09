@@ -17,7 +17,7 @@ class OFim_AdminCrawlTopxx_Controller{
      */
     public function getTopxxGenres() {
         return $this->cache->remember('topxx_genres.txt', 3600, function() {
-            $url = 'https://topxx.vip/api/v1/genres';
+            $url = API_DOMAIN . '/genres';
             $resp = @file_get_contents($url);
             if ($resp === false) {
                 return array();
@@ -48,7 +48,7 @@ class OFim_AdminCrawlTopxx_Controller{
     }
 
     public function getLastLog() {
-        $log_path = WP_CONTENT_DIR  . '/crawl_ophim_logs_topxx';
+        $log_path = WP_CONTENT_DIR  . '/crawl_topxx_logs';
         $log_filename = 'log_' . date('d-m-Y') . '.log';
         $log_data = $log_path.'/'.$log_filename;
         if (file_exists($log_data)) {

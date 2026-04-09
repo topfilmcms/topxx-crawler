@@ -3,7 +3,7 @@
 class oFim_Backend
 {
 
-    private $_menuSlug = 'ofim-manager';
+    private $_menuSlug = 'topx-manager';
     private $_page = '';
 
     public function __construct()
@@ -12,7 +12,7 @@ class oFim_Backend
         if (isset($_GET['page'])) $this->_page = $_GET['page'];
         add_action('admin_menu', array($this, 'menus'));
         if (isset($_GET['page'])) {
-            if ($_GET['page'] == 'ofim-manager-crawl-topxx') {
+            if ($_GET['page'] == 'topx-manager-crawl-topxx') {
                 add_action('admin_enqueue_scripts', array($this, 'css'));
             }
         }
@@ -42,11 +42,11 @@ class oFim_Backend
     {
         $page = $this->_page;
         global $oController;
-        if ($page == 'ofim-manager-crawl-topxx') {
+        if ($page == 'topx-manager-crawl-topxx') {
             $obj = $oController->getController('AdminCrawlTopxx', '/backend');
             $obj->display();
         }
-        if ($page == 'ofim-manager') {
+        if ($page == 'topx-manager') {
             $obj = $oController->getController('AdminManager', '/backend');
             $obj->display();
         }

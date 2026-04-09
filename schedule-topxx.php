@@ -4,28 +4,28 @@ require_once __DIR__ . '/../../../wp-admin/includes/taxonomy.php';
 require_once __DIR__ . '/../../../wp-admin/includes/image.php';
 
 set_time_limit(0);
-require_once CRAWL_OPHIM_PATH . 'define.php';
+require_once __DIR__ . '/define.php';
 
 if (!isset($argv[1])) return;
-if ($argv[1] != get_option(CRAWL_OPHIM_OPTION_SECRET_KEY, 'secret_key')) return;
+if ($argv[1] != get_option(CRAWL_TOPXX_OPTION_SECRET_KEY, 'secret_key')) return;
 
-require_once CRAWL_OPHIM_PATH . 'helpers/functions.php';
-require_once CRAWL_OPHIM_PATH . 'crawl_movies_topxx.php';
+require_once __DIR__ . '/helpers/functions.php';
+require_once __DIR__ . '/crawl_movies_topxx.php';
 
 // Get & Check Settings
-$crawl_ophim_settings = json_decode(get_option(CRAWL_OPHIM_OPTION_SETTINGS, false));
-if (!$crawl_ophim_settings) return;
+$crawl_topxx_settings = json_decode(get_option(CRAWL_TOPXX_OPTION_SETTINGS, false));
+if (!$crawl_topxx_settings) return;
 
 // Check enable
 if (getEnable() === false) {
-    update_option(CRAWL_OPHIM_OPTION_RUNNING, 0);
+    update_option(CRAWL_TOPXX_OPTION_RUNNING, 0);
     return;
 }
 // Check running
-if ((int)get_option(CRAWL_OPHIM_OPTION_RUNNING, 0) === 1) return;
+if ((int)get_option(CRAWL_TOPXX_OPTION_RUNNING, 0) === 1) return;
 
 // Update Running
-update_option(CRAWL_OPHIM_OPTION_RUNNING, 1);
+update_option(CRAWL_TOPXX_OPTION_RUNNING, 1);
 
 // Load filter genre from topxx cache file
 $filter_genre = array();
@@ -38,21 +38,21 @@ if (defined('OFIM_CACHE_FILTER_GENRE_TOPXX') && file_exists(OFIM_CACHE_FILTER_GE
         }
     }
 }
-if (empty($filter_genre) && isset($crawl_ophim_settings->filterGenreTopxx) && is_array($crawl_ophim_settings->filterGenreTopxx)) {
-    $filter_genre = $crawl_ophim_settings->filterGenreTopxx;
+if (empty($filter_genre) && isset($crawl_topxx_settings->filterGenreTopxx) && is_array($crawl_topxx_settings->filterGenreTopxx)) {
+    $filter_genre = $crawl_topxx_settings->filterGenreTopxx;
 }
 
 try {
     // Crawl Pages via Topxx API
-    $pageFrom = $crawl_ophim_settings->pageFrom;
-    $pageTo = $crawl_ophim_settings->pageTo;
+    $pageFrom = $crawl_topxx_settings->pageFrom;
+    $pageTo = $crawl_topxx_settings->pageTo;
     $listMovies = array();
     for ($i = $pageFrom; $i >= $pageTo; $i--) {
         if (getEnable() === false) {
-            update_option(CRAWL_OPHIM_OPTION_RUNNING, 0);
+            update_option(CRAWL_TOPXX_OPTION_RUNNING, 0);
             return;
         }
-        $result = crawl_topxx_page_handle("https://topxx.vip/api/v1/movies/latest?page=$i");
+        $result = crawl_topxx_page_handle(API_DOMAIN . "/movies/latest?page=$i");
         if (is_array($result)) {
             continue;
         }
@@ -69,7 +69,7 @@ try {
     // Crawl Movies
     foreach ($listMovies as $key => $data_post) {
         if (getEnable() === false) {
-            update_option(CRAWL_OPHIM_OPTION_RUNNING, 0);
+            update_option(CRAWL_TOPXX_OPTION_RUNNING, 0);
             write_log("Force Stop => Done {$countDone}/{$countMovies} movies (Nothing Update: {$countStatus[0]} | Insert: {$countStatus[1]} | Update: {$countStatus[2]} | Error: {$countStatus[3]} | Filter: {$countStatus[4]})");
             return;
         }
@@ -100,13 +100,13 @@ try {
 }
 
 // Update Running
-update_option(CRAWL_OPHIM_OPTION_RUNNING, 0);
+update_option(CRAWL_TOPXX_OPTION_RUNNING, 0);
 
 write_log("Done {$countDone}/{$countMovies} movies (Nothing Update: {$countStatus[0]} | Insert: {$countStatus[1]} | Update: {$countStatus[2]} | Error: {$countStatus[3]} | Filter: {$countStatus[4]})");
 
 function getEnable()
 {
-    $schedule = json_decode(file_get_contents(CRAWL_OPHIM_PATH_SCHEDULE_JSON));
+    $schedule = json_decode(file_get_contents(CRAWL_TOPXX_PATH_SCHEDULE_JSON));
     if ($schedule->enable) {
         return $schedule->enable;
     }
@@ -115,7 +115,7 @@ function getEnable()
 
 function write_log($log_msg, $new_line = "\n")
 {
-    $log_filename = __DIR__ . '/../../crawl_ophim_logs_topxx';
+    $log_filename = WP_CONTENT_DIR . '/crawl_topxx_logs';
     if (!file_exists($log_filename)) {
         mkdir($log_filename, 0777, true);
     }

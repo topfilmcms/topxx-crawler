@@ -31,7 +31,7 @@ if(!function_exists('dt_remove_featured')){
 add_action('wp_ajax_save_crawl_ophim_schedule_secret', 'save_crawl_ophim_schedule_secret');
 function save_crawl_ophim_schedule_secret()
 {
-    update_option(CRAWL_OPHIM_OPTION_SECRET_KEY, $_POST['secret_key']);
+    update_option(CRAWL_TOPXX_OPTION_SECRET_KEY, $_POST['secret_key']);
     die();
 }
 
@@ -50,7 +50,7 @@ function crawl_ophim_schedule_enable()
     $schedule = array(
         'enable' => $_POST['enable'] === 'true' ? true : false
     );
-    file_put_contents(CRAWL_OPHIM_PATH_SCHEDULE_JSON, json_encode($schedule));
+    file_put_contents(CRAWL_TOPXX_PATH_SCHEDULE_JSON, json_encode($schedule));
     die();
 }
 
@@ -72,10 +72,10 @@ function crawl_ophim_save_settings()
         'filterCountry' => $_POST['filterCountry'] ?? array(),
         'filterGenreTopxx' => isset($_POST['filterGenreTopxx']) && is_array($_POST['filterGenreTopxx']) ? array_map('sanitize_text_field', $_POST['filterGenreTopxx']) : array(),
     );
-    if (!get_option(CRAWL_OPHIM_OPTION_SETTINGS)) {
-        add_option(CRAWL_OPHIM_OPTION_SETTINGS, json_encode($data));
+    if (!get_option(CRAWL_TOPXX_OPTION_SETTINGS)) {
+        add_option(CRAWL_TOPXX_OPTION_SETTINGS, json_encode($data));
     } else {
-        update_option(CRAWL_OPHIM_OPTION_SETTINGS, json_encode($data));
+        update_option(CRAWL_TOPXX_OPTION_SETTINGS, json_encode($data));
     }
     die();
 }

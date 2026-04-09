@@ -123,7 +123,7 @@
 
             <p><strong>3.1. Crawl thủ công:</strong></p>
             <ol>
-                <li>Vào <strong>Cài đặt TOPXX</strong> &rarr; <a href="/wp-admin/admin.php?page=ofim-manager-crawl-topxx"><strong>Crawl Topxx</strong></a> &rarr; Tab <strong>Thủ công</strong>.</li>
+                <li>Vào <strong>Cài đặt TOPXX</strong> &rarr; <a href="/wp-admin/admin.php?page=topx-manager-crawl-topxx"><strong>Crawl Topxx</strong></a> &rarr; Tab <strong>Thủ công</strong>.</li>
                 <li><strong>Chọn ngôn ngữ ưu tiên:</strong> Tiếng Việt hoặc Tiếng Anh (ảnh hưởng đến tiêu đề, mô tả phim).</li>
                 <li><strong>Bỏ qua thể loại:</strong> Tích chọn các thể loại bạn không muốn crawl &rarr; Nhấn <strong>Lưu cấu hình</strong>.</li>
                 <li><strong>Cấu hình hình ảnh:</strong> Tùy chọn tải & resize thumb/poster, chuyển đổi WebP.</li>

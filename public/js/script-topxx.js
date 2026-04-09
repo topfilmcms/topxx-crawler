@@ -265,16 +265,24 @@ jQuery(function ($) {
             success: function (res) {
                 console.log(res)
                 let data = JSON.parse(res);
-                if (data.status) {
+                // Chỉ SCHEDULE_CRAWLER_TYPE_INSERT (1) = phim mới → tab thành công; còn lại → tab bỏ qua/lỗi
+                var scheduleCode = typeof data.schedule_code !== "undefined" && data.schedule_code !== null
+                    ? parseInt(data.schedule_code, 10)
+                    : (data.status ? 1 : 3);
+                var msg = data.msg ? String(data.msg) : "";
+                if (scheduleCode === 1) {
                     let currentList = textAreaResultSuccess.val();
-                    if (currentList != "") currentList += "\n" + linkCurrent;
-                    else currentList += linkCurrent;
+                    let line = linkCurrent + (msg ? "  |  " + msg : "");
+                    if (currentList != "") currentList += "\n" + line;
+                    else currentList = line;
                     textAreaResultSuccess.val(currentList);
                 } else {
                     let currentList = textAreaResultError.val();
-                    if (currentList != "") currentList += "\n" + linkCurrent;
-                    else currentList += linkCurrent;
-                    textAreaResultError.val(currentList + "=====>>" + data.msg);
+                    if (!msg) {
+                        msg = scheduleCode === 0 ? "Phim đã tồn tại, không đổi" : (scheduleCode === 2 ? "Đã cập nhật phim có sẵn" : (scheduleCode === 4 ? "Loại trừ thể loại" : "Lỗi / bỏ qua"));
+                    }
+                    let line = (currentList != "" ? currentList + "\n" : "") + linkCurrent + "=====>>" + msg;
+                    textAreaResultError.val(line);
                 }
 
                 var wait_timeout = 1000;

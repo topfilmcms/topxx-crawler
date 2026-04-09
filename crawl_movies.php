@@ -10,37 +10,36 @@ add_filter('intermediate_image_sizes_advanced', 'remove_image_sizes', 10, 2);
 
 function crawl_ophim_page_handle($url)
 {
-
-    $sourcePage = file_get_contents($url);
-    $sourcePage = json_decode($sourcePage);
-    $listMovies = [];
-    if (isset($sourcePage->items)) {
-        $sourcePage = $sourcePage->items;
-    }
-    if (isset($sourcePage->data->items)) {
-        $sourcePage = $sourcePage->data->items;
-    }
-
-    if (count($sourcePage) > 0) {
-        foreach ($sourcePage as $key => $item) {
-            array_push($listMovies, API_DOMAIN . "/phim/{$item->slug}|{$item->_id}|{$item->modified->time}|{$item->name}|{$item->origin_name}|{$item->year}");
-        }
-        return join("\n", $listMovies);
-    }
-    return $listMovies;
+    return crawl_topxx_page_handle($url, 'vi');
 }
 
 add_action('wp_ajax_crawl_ophim_movies', 'crawl_ophim_movies');
 function crawl_ophim_movies()
 {
     $data_post = $_POST['url'];
-    $url = explode('|', $data_post)[0];
-    $ophim_id = explode('|', $data_post)[1];
-    $ophim_update_time = explode('|', $data_post)[2];
-    $title = explode('|', $data_post)[3];
-    $org_title = explode('|', $data_post)[4];
-    $year = explode('|', $data_post)[5];
+    $parts = explode('|', $data_post);
+    if (count($parts) >= 6 && defined('API_DOMAIN')) {
+        $api_host = parse_url(API_DOMAIN, PHP_URL_HOST);
+        if ($api_host && strpos($parts[0], $api_host) !== false) {
+            $filter_genre = isset($_POST['filterGenreTopxx']) && is_array($_POST['filterGenreTopxx'])
+                ? array_map('sanitize_text_field', $_POST['filterGenreTopxx'])
+                : array();
+            echo crawl_topxx_movies_handle(
+                $parts[0],
+                $parts[1],
+                $parts[2],
+                $parts[4],
+                $parts[5],
+                $parts[3],
+                $filter_genre
+            );
+            die();
+        }
+    }
 
+    $url = $parts[0];
+    $ophim_id = $parts[1];
+    $ophim_update_time = $parts[2];
     $filterType = oIsset($_POST, 'filterType', []);
     $filterCategory = oIsset($_POST, 'filterCategory', []);
     $filterCountry = oIsset($_POST, 'filterCountry', []);
@@ -128,7 +127,7 @@ function crawl_ophim_movies_handle($url, $ophim_id, $ophim_update_time, $filterT
                 wp_update_post( $updatepost );
 
                 // Check & Update Image
-                $crawl_settings = json_decode(get_option(CRAWL_OPHIM_OPTION_SETTINGS, false));
+                $crawl_settings = json_decode(get_option(CRAWL_TOPXX_OPTION_SETTINGS, false));
                 $ophim_thumb_url = get_post_meta($post_id, 'ophim_thumb_url', true);
                 $ophim_poster_url = get_post_meta($post_id, 'ophim_poster_url', true);
                 if(!file_exists(ABSPATH . $ophim_thumb_url)) {
@@ -308,7 +307,7 @@ function add_posts($data)
     $post_id = wp_insert_post($post_data);
 
     // Download & resize image
-    $crawl_settings = json_decode(get_option(CRAWL_OPHIM_OPTION_SETTINGS, false));
+    $crawl_settings = json_decode(get_option(CRAWL_TOPXX_OPTION_SETTINGS, false));
     $thumb_image_url = download_resize_thumb($data, $post_id, $crawl_settings);
     $poster_image_url = download_resize_poster($data, $post_id, $crawl_settings);
 

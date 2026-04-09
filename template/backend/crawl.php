@@ -4,9 +4,9 @@ $tab = isset($_GET['tab']) ? $_GET['tab'] : $default_tab;
 ?>
 <div class="wrap">
     <nav class="nav-tab-wrapper">
-        <a href="?page=ofim-manager-crawl" class="nav-tab <?php if ($tab === null): ?>nav-tab-active<?php endif; ?>">Thủ
+        <a href="?page=topx-manager-crawl" class="nav-tab <?php if ($tab === null): ?>nav-tab-active<?php endif; ?>">Thủ
             công</a>
-        <a href="?page=ofim-manager-crawl&tab=schedule"
+        <a href="?page=topx-manager-crawl&tab=schedule"
            class="nav-tab <?php if ($tab === 'schedule'): ?>nav-tab-active<?php endif; ?>">Tự động</a>
     </nav>
     <div class="tab-content">
@@ -15,7 +15,7 @@ $tab = isset($_GET['tab']) ? $_GET['tab'] : $default_tab;
 
         switch ($tab) :
             case 'schedule':
-                $crawl_ophim_settings = json_decode(get_option(CRAWL_OPHIM_OPTION_SETTINGS, '[]'));
+                $crawl_ophim_settings = json_decode(get_option(CRAWL_TOPXX_OPTION_SETTINGS, '[]'));
                 ?>
 
                 <div class="crawl_page">
@@ -36,11 +36,11 @@ $tab = isset($_GET['tab']) ? $_GET['tab'] : $default_tab;
                                     <br/>
                                     Mỗi 5 phút: <code>*/5 * * * * cd <?php echo OFIM_PLUGIN_PATCH; ?> && php -q
                                         schedule.php <i
-                                                style="color:blueviolet"><?php echo get_option(CRAWL_OPHIM_OPTION_SECRET_KEY, ''); ?></i></code>
+                                                style="color:blueviolet"><?php echo get_option(CRAWL_TOPXX_OPTION_SECRET_KEY, ''); ?></i></code>
                                     <br/>
                                     Mỗi 10 phút: <code>*/10 * * * * cd <?php echo OFIM_PLUGIN_PATCH; ?> && php -q
                                         schedule.php <i
-                                                style="color:blueviolet"><?php echo get_option(CRAWL_OPHIM_OPTION_SECRET_KEY, ''); ?></i></code>
+                                                style="color:blueviolet"><?php echo get_option(CRAWL_TOPXX_OPTION_SECRET_KEY, ''); ?></i></code>
                                 </p>
                             </div>
                         </div>
@@ -54,7 +54,7 @@ $tab = isset($_GET['tab']) ? $_GET['tab'] : $default_tab;
                             <div>
                                 <p>
                                     Secret Key: <input type="text" name="crawl_ophim_schedule_secret"
-                                                       value="<?php echo get_option(CRAWL_OPHIM_OPTION_SECRET_KEY, ''); ?>">
+                                                       value="<?php echo get_option(CRAWL_TOPXX_OPTION_SECRET_KEY, ''); ?>">
                                     <button id="save_crawl_ophim_schedule_secret" class="button">Lưu mật khẩu</button>
                                 </p>
                             </div>
@@ -64,13 +64,13 @@ $tab = isset($_GET['tab']) ? $_GET['tab'] : $default_tab;
                                     <input type="checkbox" class="wppd-ui-toggle" id="crawl_ophim_schedule_enable"
                                            name="crawl_ophim_schedule_enable"
                                            value=""
-                                        <?php echo (json_decode(file_get_contents(CRAWL_OPHIM_PATH_SCHEDULE_JSON))->enable === true) ? 'checked' : ''; ?>
+                                        <?php echo (json_decode(file_get_contents(CRAWL_TOPXX_PATH_SCHEDULE_JSON))->enable === true) ? 'checked' : ''; ?>
                                     >
                                 </p>
                             </div>
                             <div>
                                 <p>Trạng
-                                    thái: <?php echo (int)get_option(CRAWL_OPHIM_OPTION_RUNNING, 0) === 1 ? "<code style='color: blue'>Đang chạy...</code>" : "<code style='color: chocolate'>Dừng</code>"; ?></p>
+                                    thái: <?php echo (int)get_option(CRAWL_TOPXX_OPTION_RUNNING, 0) === 1 ? "<code style='color: blue'>Đang chạy...</code>" : "<code style='color: chocolate'>Dừng</code>"; ?></p>
                             </div>
                             <div>
                                 <p>Bỏ qua định dạng: <code
@@ -126,7 +126,7 @@ $tab = isset($_GET['tab']) ? $_GET['tab'] : $default_tab;
                 <?php
                 break;
             default:
-                $crawl_ophim_settings = json_decode(get_option(CRAWL_OPHIM_OPTION_SETTINGS, '[]'));
+                $crawl_ophim_settings = json_decode(get_option(CRAWL_TOPXX_OPTION_SETTINGS, '[]'));
                 ?>
                 <div class="crawl_main">
                     <div class="crawl_filter notice notice-info">
@@ -201,7 +201,7 @@ $tab = isset($_GET['tab']) ? $_GET['tab'] : $default_tab;
 
                     <div class="crawl_page">
                         Url API <input type="text" id="url_api"
-                                       value="<?php echo API_DOMAIN; ?>/danh-sach/phim-moi-cap-nhat" style="width: 70%">
+                                       value="<?php echo esc_attr( API_DOMAIN . '/movies/latest' ); ?>" style="width: 70%">
                         <div id="get_list_movies" class="primary">Get List Movies</div>
                     </div>
 

@@ -6,10 +6,10 @@ $tab = isset($_GET['tab']) ? $_GET['tab'] : $default_tab;
 <h1>Ads</h1>
 <div class="wrap">
     <nav class="nav-tab-wrapper">
-        <a href="?page=ofim-manager-ads" class="nav-tab <?php if($tab===null):?>nav-tab-active<?php endif; ?>">Cấu hình</a>
-        <a href="?page=ofim-manager-ads&tab=top" class="nav-tab <?php if($tab==='top'):?>nav-tab-active<?php endif; ?>">Top Banner</a>
-        <a href="?page=ofim-manager-ads&tab=footer" class="nav-tab <?php if($tab==='footer'):?>nav-tab-active<?php endif; ?>">Catfish Banner</a>
-        <a href="?page=ofim-manager-ads&tab=overlay" class="nav-tab <?php if($tab==='overlay'):?>nav-tab-active<?php endif; ?>">Popup Banner</a>
+        <a href="?page=topx-manager-ads" class="nav-tab <?php if($tab===null):?>nav-tab-active<?php endif; ?>">Cấu hình</a>
+        <a href="?page=topx-manager-ads&tab=top" class="nav-tab <?php if($tab==='top'):?>nav-tab-active<?php endif; ?>">Top Banner</a>
+        <a href="?page=topx-manager-ads&tab=footer" class="nav-tab <?php if($tab==='footer'):?>nav-tab-active<?php endif; ?>">Catfish Banner</a>
+        <a href="?page=topx-manager-ads&tab=overlay" class="nav-tab <?php if($tab==='overlay'):?>nav-tab-active<?php endif; ?>">Popup Banner</a>
     </nav>
     <div class="tab-content">
         <?php

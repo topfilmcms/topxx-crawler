@@ -51,7 +51,7 @@ function crawl_topxx_page_handle($url, $language = 'vi')
                 }
             }
 
-            array_push($listMovies, "https://topxx.vip/api/v1/movies/{$item->code}|{$item->code}|{$item->updated_at}|{$title}|{$slug}|{$language}");
+            array_push($listMovies, API_DOMAIN . "/movies/{$item->code}|{$item->code}|{$item->updated_at}|{$title}|{$slug}|{$language}");
         }
         return join("\n", $listMovies);
     }
@@ -82,7 +82,7 @@ function crawl_topxx_movies_handle($url, $code, $updated_at, $slug, $language, $
         if ($sourcePage === false) {
             return json_encode(array(
                 'status' => false,
-                'msg' => 'Cannot fetch URL',
+                'msg' => 'Lỗi: không tải được dữ liệu từ API (URL hoặc mạng)',
                 'wait' => true,
                 'schedule_code' => SCHEDULE_CRAWLER_TYPE_ERROR
             ));
@@ -91,7 +91,7 @@ function crawl_topxx_movies_handle($url, $code, $updated_at, $slug, $language, $
         if (empty($sourcePage) || empty($sourcePage['data'])) {
             return json_encode(array(
                 'status' => false,
-                'msg' => 'Invalid response',
+                'msg' => 'Lỗi: phản hồi API không hợp lệ hoặc thiếu dữ liệu phim',
                 'wait' => true,
                 'schedule_code' => SCHEDULE_CRAWLER_TYPE_ERROR
             ));
@@ -107,8 +107,8 @@ function crawl_topxx_movies_handle($url, $code, $updated_at, $slug, $language, $
             foreach ($filter_genre as $exclude_code) {
                 if (in_array($exclude_code, $movie_genre_codes)) {
                     return json_encode(array(
-                        'status' => true,
-                        'msg' => 'Bỏ qua (thể loại bị loại trừ)',
+                        'status' => false,
+                        'msg' => 'Bỏ qua: phim thuộc thể loại nằm trong danh sách loại trừ',
                         'wait' => false,
                         'schedule_code' => SCHEDULE_CRAWLER_TYPE_FILTER
                     ));
@@ -148,10 +148,10 @@ function crawl_topxx_movies_handle($url, $code, $updated_at, $slug, $language, $
                 $get_fetch_time = get_post_meta($post->ID, 'ophim_fetch_topxx_updated_at', true);
                 if ($get_fetch_time == $updated_at) { // Không có gì cần cập nhật
                     $result = array(
-                        'status' => true,
+                        'status' => false,
                         'post_id' => $post->ID,
                         'list_episode' => [],
-                        'msg' => 'Nothing needs updating!',
+                        'msg' => 'Phim đã tồn tại trên site — dữ liệu API không đổi, không cập nhật',
                         'wait' => false,
                         'schedule_code' => SCHEDULE_CRAWLER_TYPE_NOTHING
                     );
@@ -205,7 +205,7 @@ function crawl_topxx_movies_handle($url, $code, $updated_at, $slug, $language, $
                 wp_update_post( $updatepost );
 
                 // Check & Update Image
-                $crawl_settings = json_decode(get_option(CRAWL_OPHIM_OPTION_SETTINGS, false));
+                $crawl_settings = json_decode(get_option(CRAWL_TOPXX_OPTION_SETTINGS, false));
                 $ophim_thumb_url = get_post_meta($post_id, 'ophim_thumb_url', true);
                 $ophim_poster_url = get_post_meta($post_id, 'ophim_poster_url', true);
                 if(!file_exists(ABSPATH . $ophim_thumb_url)) {
@@ -220,10 +220,11 @@ function crawl_topxx_movies_handle($url, $code, $updated_at, $slug, $language, $
                 // Re-Update Episodes
                 $list_episode = get_list_episode_topxx($sourcePage, $post->ID);
                 $result = array(
-                    'status' => true,
+                    'status' => false,
                     'post_id' => $post->ID,
                     'data' => $data,
                     'list_episode' => $list_episode,
+                    'msg' => 'Phim đã tồn tại trên site — đã cập nhật metadata / tập phim',
                     'wait' => true,
                     'schedule_code' => SCHEDULE_CRAWLER_TYPE_UPDATE
                 );
@@ -241,6 +242,7 @@ function crawl_topxx_movies_handle($url, $code, $updated_at, $slug, $language, $
             'post_id' => $post_id,
             'data' => $url,
             'list_episode' => 'Add new',
+            'msg' => 'Đã thêm phim mới',
             'wait' => true,
             'schedule_code' => SCHEDULE_CRAWLER_TYPE_INSERT
         );
@@ -587,7 +589,7 @@ function add_posts_topxx($data)
     $post_id = wp_insert_post($post_data);
 
     // Download & resize image
-    $crawl_settings = json_decode(get_option(CRAWL_OPHIM_OPTION_SETTINGS, false));
+    $crawl_settings = json_decode(get_option(CRAWL_TOPXX_OPTION_SETTINGS, false));
     $thumb_image_url = download_resize_thumb_topxx($data, $post_id, $crawl_settings);
     $poster_image_url = download_resize_poster_topxx($data, $post_id, $crawl_settings);
 

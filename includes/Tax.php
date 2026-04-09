@@ -125,7 +125,7 @@ function ophim_include_myuploadscript()
 
     $page = isset($_GET['page']) ? $_GET['page'] : '';
 
-    if ($page === 'ofim-manager-crawl-topxx') {
+    if ($page === 'topx-manager-crawl-topxx') {
         // Trang Crawl Topxx: chỉ dùng script-topxx.js
         wp_enqueue_script('admin_js_topxx', OFIM_JS_URL . '/script-topxx.js', array('jquery'), null, false);
     } else {

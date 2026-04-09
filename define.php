@@ -26,11 +26,14 @@ define('OFIM_CACHE_FILTER_GENRE_TOPXX', OFIM_CACHE_DIR . 'filter_genre_topxx.jso
 
 define('OFIM_PREFIX'  ,'OFIM_');
 
-//OPHIM
-define('API_DOMAIN', 'https://ophim1.com');
-define('CRAWL_OPHIM_OPTION_SETTINGS', 'crawl_ophim_schedule_settings');
-define('CRAWL_OPHIM_OPTION_RUNNING', 'crawl_ophim_schedule_running');
-define('CRAWL_OPHIM_OPTION_SECRET_KEY', 'crawl_ophim_schedule_secret_key');
+// TOPXX API (site dùng cho link tài liệu; API_DOMAIN = base REST v1)
+define('TOPXX_SITE_URL', 'https://topxx.vip');
+define('API_DOMAIN', TOPXX_SITE_URL . '/api/v1');
+
+// Lưu ý: tên option trong DB vẫn crawl_ophim_* để tương thích site đã cài.
+define('CRAWL_TOPXX_OPTION_SETTINGS', 'crawl_ophim_schedule_settings');
+define('CRAWL_TOPXX_OPTION_RUNNING', 'crawl_ophim_schedule_running');
+define('CRAWL_TOPXX_OPTION_SECRET_KEY', 'crawl_ophim_schedule_secret_key');
 
 define('SCHEDULE_CRAWLER_TYPE_NOTHING', 0);
 define('SCHEDULE_CRAWLER_TYPE_INSERT', 1);
@@ -38,5 +41,5 @@ define('SCHEDULE_CRAWLER_TYPE_UPDATE', 2);
 define('SCHEDULE_CRAWLER_TYPE_ERROR', 3);
 define('SCHEDULE_CRAWLER_TYPE_FILTER', 4);
 
-define('CRAWL_OPHIM_PATH', plugin_dir_path(__FILE__));
-define('CRAWL_OPHIM_PATH_SCHEDULE_JSON', CRAWL_OPHIM_PATH . 'schedule.json');
+define('CRAWL_TOPXX_PATH', plugin_dir_path(__FILE__));
+define('CRAWL_TOPXX_PATH_SCHEDULE_JSON', CRAWL_TOPXX_PATH . 'schedule.json');
